@@ -1,4 +1,3 @@
-import intro from './intro';
-import showScreen from './render';
+import renderIntroScreen from './templates/introScreen';
 
-showScreen(intro);
+renderIntroScreen();

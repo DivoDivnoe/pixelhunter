@@ -14,6 +14,7 @@ const imagemin = require('gulp-imagemin');
 const rollup = require('gulp-better-rollup');
 const sourcemaps = require('gulp-sourcemaps');
 const mocha = require('gulp-mocha');
+const builtins = require('rollup-plugin-node-builtins');
 
 gulp.task('test', function() {
   return gulp.src(['js/**/*.test.js'], {read: false}).pipe(
@@ -55,7 +56,11 @@ gulp.task('scripts', function() {
     .src('js/**/*.js')
     .pipe(plumber())
     .pipe(sourcemaps.init())
-    .pipe(rollup({}, 'iife'))
+    .pipe(rollup({
+      plugins: [
+        builtins()
+      ]
+    }, 'iife'))
     .pipe(sourcemaps.write(''))
     .pipe(gulp.dest('build/js/'));
 });

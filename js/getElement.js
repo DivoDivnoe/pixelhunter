@@ -3,7 +3,7 @@ const getElementFromTemplate = (template) => {
 
   div.innerHTML = template;
 
-  return div;
+  return div.children.length > 1 ? div : div.firstElementChild;
 };
 
 export default getElementFromTemplate;

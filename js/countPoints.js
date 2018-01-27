@@ -1,39 +1,43 @@
-const countPoints = (answers, lives) => {
+import * as constants from './constants';
+import {initialState} from './model/data';
+
+const countPoints = (state) => {
+  const answers = state.answers;
+  const lives = state.lives;
+
   if (
     !lives ||
-    answers.length < 10 ||
-    answers.filter((answer) => !answer.answer).length > 2
+    answers.length < initialState.questions.length
   ) {
     return -1;
   }
 
-  const points = {
-    LIVE_POINTS: 50,
-    FAST_ANSWER_POINTS: 150,
-    MEDIUM_ANSWER_POINTS: 100,
-    SLOW_ANSWER_POINTS: 50
+  const result = {
+    total: 0,
+    rightAnswerPoints: 0,
+    speedBonus: 0,
+    livesBonus: 0,
+    slowPenalty: 0
   };
 
-  return (
-    answers.reduce((acc, answer) => {
-      let result = acc;
+  for (const answer of answers) {
+    if (!answer.answer) {
+      continue;
+    }
 
-      if (!answer.answer) {
-        return result;
-      }
+    if (answer.time < constants.FAST_ASWER_TIME_UPPER_LIMIT) {
+      result.speedBonus += constants.BONUS_POINTS_FOR_SPEED;
+    } else if (answer.time >= constants.SLOW_ANSWER_TIME_BOTTOM_LIMIT) {
+      result.slowPenalty += constants.PENALTY_FOR_SLOWNESS;
+    }
 
-      if (answer.time < 10) {
-        result += points.FAST_ANSWER_POINTS;
-      } else if (answer.time < 20) {
-        result += points.MEDIUM_ANSWER_POINTS;
-      } else {
-        result += points.SLOW_ANSWER_POINTS;
-      }
+    result.rightAnswerPoints += constants.POINTS_FOR_RIGHT_ANSWER;
+  }
 
-      return result;
-    }, 0) +
-    lives * points.LIVE_POINTS
-  );
+  result.livesBonus = lives * constants.BONUS_POINTS_FOR_LIVE;
+  result.total = result.rightAnswerPoints + result.speedBonus + result.livesBonus - result.slowPenalty;
+
+  return result;
 };
 
 export default countPoints;
