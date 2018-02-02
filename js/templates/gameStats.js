@@ -1,4 +1,4 @@
-import * as constants from '../constants';
+import * as constants from '../config/config';
 
 const gameStats = (answers) => `
   <ul class="stats">
