@@ -1,3 +1,3 @@
-import renderIntroScreen from './templates/introScreen';
+import renderIntroScreen from './intro/introScreen';
 
 renderIntroScreen();

@@ -1,4 +1,4 @@
-import * as constants from '../constants';
+import * as constants from '../config/config';
 
 export const initialState = {
   name: null,
@@ -6,6 +6,7 @@ export const initialState = {
   time: constants.TIME_PER_SCREEN,
   lives: constants.NUM_OF_LIVES,
   answers: [],
+  points: null,
   questionNumber: 0,
   questions: [
     {
