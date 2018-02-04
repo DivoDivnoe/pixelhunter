@@ -23,10 +23,10 @@ class GreetingsScreenView extends abstractView {
   _bind() {
     const button = this.element.querySelector(`.greeting__continue`);
 
-    button.addEventListener(`click`, () => this.buttonClickHandler());
+    button.addEventListener(`click`, () => this.continueHandler());
   }
 
-  buttonClickHandler() {}
+  continueHandler() {}
 }
 
 export default GreetingsScreenView;

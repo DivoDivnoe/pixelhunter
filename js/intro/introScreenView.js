@@ -19,12 +19,10 @@ class IntroScreenView extends abstractView {
   _bind() {
     const asterix = this.element.querySelector(`.intro__asterisk`);
 
-    asterix.addEventListener(`click`, () => this.asterixClickHandler());
+    asterix.addEventListener(`click`, () => this.beginGameHandler());
   }
 
-  asterixClickHandler() {
-
-  }
+  beginGameHandler() {}
 }
 
 export default IntroScreenView;

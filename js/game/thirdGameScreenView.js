@@ -34,11 +34,11 @@ class ThirdGameScreenView extends abstractView {
       const target = evt.target;
       const answer = [...options].indexOf(target) === game.items.findIndex((item) => item.answer);
 
-      this.imageClickHandler(answer);
+      this.answerHandler(answer);
     }));
   }
 
-  imageClickHandler() {}
+  answerHandler() {}
 }
 
 export default ThirdGameScreenView;

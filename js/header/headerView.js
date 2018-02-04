@@ -1,5 +1,4 @@
 import abstractView from '../view/abstractView';
-
 class HeaderView extends abstractView {
   constructor(state) {
     super();
@@ -29,13 +28,62 @@ class HeaderView extends abstractView {
     `;
   }
 
+  get element() {
+    if (!this._element) {
+      this._element = this._render();
+      this._bind();
+      this._startTimer();
+    }
+
+    return this._element;
+  }
+
   _bind() {
     const back = this.element.querySelector(`.back`);
+
 
     back.addEventListener(`click`, () => this.backClickHandler());
   }
 
+  _startTimer() {
+    const gameTimer = this.element.querySelector(`.game__timer`);
+
+    if (!gameTimer) {
+      return false;
+    }
+    const timer = {
+      leftTime: this.state.time,
+      isActive: true,
+      tick() {
+        this.leftTime--;
+        if (!this.leftTime) {
+          this.isActive = false;
+        }
+      }
+    };
+    this.timer = setInterval(() => {
+      if (!timer.isActive) {
+        this.stopTimer();
+        this.finishTimeHandler(false);
+      } else {
+        timer.tick();
+        this.changeTimeHandler(timer.leftTime);
+        gameTimer.textContent = timer.leftTime;
+      }
+    }, 1000);
+
+    return this.timer;
+  }
+
+  stopTimer() {
+    clearInterval(this.timer);
+  }
+
   backClickHandler() {}
+
+  finishTimeHandler() {}
+
+  changeTimeHandler() {}
 }
 
 export default HeaderView;

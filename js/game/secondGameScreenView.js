@@ -39,11 +39,11 @@ class SecondGameScreenView extends abstractView {
     [...answers].forEach((item) => item.addEventListener(`change`, () => {
       const answer = form.question1.value === game.answer;
 
-      this.inputChangeHandler(answer);
+      this.answerHandler(answer);
     }));
   }
 
-  inputChangeHandler() {}
+  answerHandler() {}
 }
 
 export default SecondGameScreenView;

@@ -21,17 +21,21 @@ const countPoints = (state) => {
   };
 
   for (const answer of answers) {
-    if (!answer.answer) {
+    if (!answer) {
       continue;
     }
 
-    if (answer.time < constants.FAST_ASWER_TIME_UPPER_LIMIT) {
-      result.speedBonus += constants.BONUS_POINTS_FOR_SPEED;
-    } else if (answer.time >= constants.SLOW_ANSWER_TIME_BOTTOM_LIMIT) {
-      result.slowPenalty += constants.PENALTY_FOR_SLOWNESS;
-    }
-
     result.rightAnswerPoints += constants.POINTS_FOR_RIGHT_ANSWER;
+
+    switch (answer) {
+      case constants.Answer.FAST: {
+        result.speedBonus += constants.BONUS_POINTS_FOR_SPEED;
+        break;
+      }
+      case constants.Answer.SLOW: {
+        result.slowPenalty += constants.PENALTY_FOR_SLOWNESS;
+      }
+    }
   }
 
   result.livesBonus = lives * constants.BONUS_POINTS_FOR_LIVE;

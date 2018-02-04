@@ -1,22 +1,15 @@
 import * as constants from '../config/config';
 
+const router = {
+  [constants.Answer.SLOW]: `<li class="stats__result stats__result--slow"></li>`,
+  [constants.Answer.NORMAL]: `<li class="stats__result stats__result--correct"></li>`,
+  [constants.Answer.FAST]: `<li class="stats__result stats__result--fast"></li>`,
+  [constants.Answer.FAIL]: `<li class="stats__result stats__result--wrong"></li>`
+};
+
 const gameStats = (answers) => `
   <ul class="stats">
-    ${answers.map((answer) => {
-    if (!answer.answer) {
-      return `<li class="stats__result stats__result--wrong"></li>`;
-    }
-
-    let str = `<li class="stats__result stats__result--correct"></li>`;
-
-    if (answer.time < constants.FAST_ASWER_TIME_UPPER_LIMIT) {
-      str = `<li class="stats__result stats__result--fast"></li>`;
-    } else if (answer.time >= constants.SLOW_ANSWER_TIME_BOTTOM_LIMIT) {
-      str = `<li class="stats__result stats__result--slow"></li>`;
-    }
-
-    return str;
-  }).join(``)}
+    ${answers.map((answer) => router[answer]).join(``)}
     ${new Array(constants.NUM_OF_QUESTIONS - answers.length)
       .fill(`<li class="stats__result stats__result--unknown"></li>`)
       .join(``)}
