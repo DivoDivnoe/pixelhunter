@@ -6,10 +6,10 @@ const resize = (frame, given) => {
 
   if (outOffsetWidth >= outOffsetHeight) {
     result.width = frame.width;
-    result.height = result.width / ratio;
+    result.height = Math.round(result.width / ratio);
   } else {
     result.height = frame.height;
-    result.width = result.height * ratio;
+    result.width = Math.round(result.height * ratio);
   }
 
   return result;

@@ -7,6 +7,16 @@ const PENALTY_FOR_SLOWNESS = 50;
 const SLOW_ANSWER_TIME_BOTTOM_LIMIT = 20;
 const FAST_ASWER_TIME_UPPER_LIMIT = 10;
 const NUM_OF_QUESTIONS = 10;
+const Answer = {
+  FAIL: 0,
+  SLOW: 1,
+  NORMAL: 2,
+  FAST: 3
+};
+const Result = {
+  LOSS: 0,
+  WIN: 1
+};
 
 export {
   NUM_OF_LIVES,
@@ -17,5 +27,7 @@ export {
   PENALTY_FOR_SLOWNESS,
   SLOW_ANSWER_TIME_BOTTOM_LIMIT,
   FAST_ASWER_TIME_UPPER_LIMIT,
-  NUM_OF_QUESTIONS
+  NUM_OF_QUESTIONS,
+  Answer,
+  Result
 };

@@ -50,13 +50,13 @@ class FirstGameScreenView extends abstractView {
       const game = this.state.questions[this.state.questionNumber];
       const answer = value1 === game.items[0][`answer`] && value2 === game.items[1][`answer`];
 
-      this.inputChangeHandler(answer);
+      this.answerHandler(answer);
 
       return answer;
     }));
   }
 
-  inputChangeHandler() {}
+  answerHandler() {}
 }
 
 export default FirstGameScreenView;

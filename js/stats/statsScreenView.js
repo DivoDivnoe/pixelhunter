@@ -1,5 +1,7 @@
 import abstractView from '../view/abstractView';
 import gameStats from '../templates/gameStats';
+import countPoints from '../countPoints';
+import * as constants from '../config/config';
 
 class StatsScreenView extends abstractView {
   constructor(state) {
@@ -8,41 +10,42 @@ class StatsScreenView extends abstractView {
   }
 
   get template() {
-    const points = this.state.points;
+    const points = countPoints(this.state);
+    const result = this.state.result;
 
     return `
       <div class="result">
-        <h1>${this.state.result === `win` ? `Победа!` : `Вы проиграли!`}</h1>
+        <h1>${result ? `Победа!` : `Вы проиграли!`}</h1>
         <table class="result__table">
           <tr>
             <td class="result__number">1.</td>
             <td colspan="2">
               ${gameStats(this.state.answers)}
             </td>
-            <td class="result__points">×&nbsp;100</td>
-            <td class="result__total">${this.state.result === `win` ? points.rightAnswerPoints : `FAIL`}</td>
+            <td class="result__points">×&nbsp;${constants.POINTS_FOR_RIGHT_ANSWER}</td>
+            <td class="result__total">${result ? points.rightAnswerPoints : `FAIL`}</td>
           </tr>
-          ${this.state.result === `win`
+          ${result
     ? `
         <tr>
           <td></td>
           <td class="result__extra">Бонус за скорость:</td>
-          <td class="result__extra">${points.speedBonus / 50}&nbsp;<span class="stats__result stats__result--fast"></span></td>
-          <td class="result__points">×&nbsp;50</td>
+          <td class="result__extra">${points.speedBonus / constants.BONUS_POINTS_FOR_SPEED}&nbsp;<span class="stats__result stats__result--fast"></span></td>
+          <td class="result__points">×&nbsp;${constants.BONUS_POINTS_FOR_SPEED}</td>
           <td class="result__total">${points.speedBonus}</td>
         </tr>
         <tr>
           <td></td>
           <td class="result__extra">Бонус за жизни:</td>
-          <td class="result__extra">${points.livesBonus / 50}&nbsp;<span class="stats__result stats__result--alive"></span></td>
-          <td class="result__points">×&nbsp;50</td>
+          <td class="result__extra">${points.livesBonus / constants.BONUS_POINTS_FOR_LIVE}&nbsp;<span class="stats__result stats__result--alive"></span></td>
+          <td class="result__points">×&nbsp;${constants.BONUS_POINTS_FOR_LIVE}</td>
           <td class="result__total">${points.livesBonus}</td>
         </tr>
         <tr>
           <td></td>
           <td class="result__extra">Штраф за медлительность:</td>
-          <td class="result__extra">${points.slowPenalty / 50}&nbsp;<span class="stats__result stats__result--slow"></span></td>
-          <td class="result__points">×&nbsp;50</td>
+          <td class="result__extra">${points.slowPenalty / constants.PENALTY_FOR_SLOWNESS}&nbsp;<span class="stats__result stats__result--slow"></span></td>
+          <td class="result__points">×&nbsp;${constants.PENALTY_FOR_SLOWNESS}</td>
           <td class="result__total">${points.slowPenalty}</td>
         </tr>
         <tr>

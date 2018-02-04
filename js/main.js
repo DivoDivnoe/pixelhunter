@@ -1,3 +1,4 @@
-import renderIntroScreen from './intro/introScreen';
+import Application from './application';
+import {initialState} from './model/data';
 
-renderIntroScreen();
+new Application(initialState).init();
