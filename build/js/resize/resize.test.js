@@ -2014,7 +2014,8 @@ Item.prototype.run = function () {
 
 
 
-// from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
+// generate timestamp or delta
+// see http://nodejs.org/api/process.html#process_process_hrtime
 
 var inherits;
 if (typeof Object.create === 'function'){
@@ -2469,6 +2470,7 @@ function objectToString(o) {
 }
 
 
+// log is just a thin wrapper to console.log that prepends a timestamp
 
 
 
@@ -2600,6 +2602,11 @@ function isView(arrbuf) {
 function assert(value, message) {
   if (!value) fail(value, true, message, '==', ok);
 }
+// 2. The AssertionError is defined in assert.
+// new assert.AssertionError({ message: message,
+//                             actual: actual,
+//                             expected: expected })
+
 var regex = /\s*function\s+([^\(\s]*)\s*/;
 // based on https://github.com/ljharb/function.prototype.name/blob/adeeeec8bfcc6068b187d7d9fb3d5bb1d3a30899/implementation.js
 function getName(func) {
@@ -2709,6 +2716,9 @@ function ok(value, message) {
   if (!value) fail(value, true, message, '==', ok);
 }
 assert.ok = ok;
+// 5. The equality assertion tests shallow, coercive equality with
+// ==.
+// assert.equal(actual, expected, message_opt);
 assert.equal = equal;
 function equal(actual, expected, message) {
   if (actual != expected) fail(actual, expected, message, '==', equal);

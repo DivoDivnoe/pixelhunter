@@ -263,7 +263,7 @@ class StatsScreenView extends AbstractView {
     : ``}
         </table>
       </div>
-      ${this.state.stats ? this.state.stats.map(resultTable).join(``) : ``}
+      ${this.state.stats ? this.state.stats.slice(0, -1).map(resultTable).join(``) : ``}
     `;
   }
 }
@@ -277,16 +277,16 @@ class StatsScreenController {
   }
 
   init() {
-    this.header.backClickHandler = () => {
-      const stats = this.model.state.answers;
-      const lives = this.model.state.lives;
+    const stats = this.model.state.answers;
+    const lives = this.model.state.lives;
 
-      this.model.save({stats, lives})
-          .then(() => this.model.resetState(this.model.state.questions))
-          .then(() => this.model.loadStatistics())
-          .then(() => this.application.showWelcome());
+    this.model.save({stats, lives})
+        .then(() => this.model.loadStatistics())
+        .then(() => showScreen(this.screen.element, this.header.element));
+    this.header.backClickHandler = () => {
+      this.model.resetState(this.model.state.questions);
+      this.application.showWelcome();
     };
-    showScreen(this.screen.element, this.header.element);
   }
 }
 
