@@ -6,7 +6,7 @@ class AbstractAdapter {
 
 const defaultAdapter = new class extends AbstractAdapter {
   toServer(data) {
-    JSON.stringify(data);
+    return JSON.stringify(data);
   }
 }();
 
@@ -29,12 +29,13 @@ class AbstractModel {
         .catch((error) => console.error(error));
   }
 
-  save(adapter = defaultAdapter, data) {
-    fetch(this.urlWrite, {
+  save(data, adapter = defaultAdapter) {
+    console.log(adapter.toServer(data));
+    return fetch(this.urlWrite, {
       method: `POST`,
       body: adapter.toServer(data),
       headers: {
-        'Content-Type': `applicaton/json`
+        'Content-Type': `application/json`
       }
     });
   }

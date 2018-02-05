@@ -3,11 +3,15 @@ import * as constants from '../config/config';
 
 class Model extends AbstractModel {
   get urlRead() {
-    return `https://es.dump.academy/pixel-hunter/questions`;
+    return `${constants.API_URL}/questions`;
   }
 
   get urlWrite() {
+    return `${constants.API_URL}/stats/:Andron1`;
+  }
 
+  get statsUrlRead() {
+    return `${constants.API_URL}/stats/:Andron1`;
   }
 
   get initialState() {
@@ -18,7 +22,8 @@ class Model extends AbstractModel {
       lives: constants.NUM_OF_LIVES,
       answers: [],
       questionNumber: 0,
-      questions: null
+      questions: null,
+      stats: null
     };
   }
 
@@ -42,6 +47,16 @@ class Model extends AbstractModel {
     return super.load()
         .then((data) => {
           this.state.questions = data;
+
+          return this.loadStatistics();
+        });
+  }
+
+  loadStatistics() {
+    return fetch(this.statsUrlRead)
+        .then((response) => response.json())
+        .then((data) => {
+          this.state.stats = data;
         });
   }
 
@@ -69,11 +84,14 @@ class Model extends AbstractModel {
     });
 
     if (!this.state.lives) {
-      this.state = Object.assign({}, this.state, {result: constants.Result.LOSS});
+      this.state = Object.assign({}, this.state, {
+        result: constants.Result.LOSS
+      });
     } else if (this.state.questionNumber === this.state.questions.length) {
-      this.state = (Object.assign({}, this.state, {result: constants.Result.WIN}));
+      this.state = (Object.assign({}, this.state, {
+        result: constants.Result.WIN
+      }));
     }
-    console.log(this.state);
 
     return this.state;
   }

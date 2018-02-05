@@ -7,6 +7,7 @@ const PENALTY_FOR_SLOWNESS = 50;
 const SLOW_ANSWER_TIME_BOTTOM_LIMIT = 20;
 const FAST_ASWER_TIME_UPPER_LIMIT = 10;
 const NUM_OF_QUESTIONS = 10;
+const API_URL = `https://es.dump.academy/pixel-hunter`;
 
 const QuestionType = {
   TWO_OF_TWO: `two-of-two`,
@@ -15,10 +16,10 @@ const QuestionType = {
 };
 
 const Answer = {
-  FAIL: 0,
-  SLOW: 1,
-  NORMAL: 2,
-  FAST: 3
+  FAIL: `fail`,
+  SLOW: `slow`,
+  NORMAL: `right`,
+  FAST: `fast`
 };
 const Result = {
   LOSS: `loss`,
@@ -40,6 +41,7 @@ export {
   SLOW_ANSWER_TIME_BOTTOM_LIMIT,
   FAST_ASWER_TIME_UPPER_LIMIT,
   NUM_OF_QUESTIONS,
+  API_URL,
   QuestionType,
   AnswerType,
   Answer,
