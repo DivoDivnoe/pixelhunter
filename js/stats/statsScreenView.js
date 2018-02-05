@@ -15,7 +15,7 @@ class StatsScreenView extends abstractView {
 
     return `
       <div class="result">
-        <h1>${result ? `Победа!` : `Вы проиграли!`}</h1>
+        <h1>${result === constants.Result.WIN ? `Победа!` : `Вы проиграли!`}</h1>
         <table class="result__table">
           <tr>
             <td class="result__number">1.</td>
@@ -23,9 +23,9 @@ class StatsScreenView extends abstractView {
               ${gameStats(this.state.answers)}
             </td>
             <td class="result__points">×&nbsp;${constants.POINTS_FOR_RIGHT_ANSWER}</td>
-            <td class="result__total">${result ? points.rightAnswerPoints : `FAIL`}</td>
+            <td class="result__total">${result === constants.Result.WIN ? points.rightAnswerPoints : `FAIL`}</td>
           </tr>
-          ${result
+          ${result === constants.Result.WIN
     ? `
         <tr>
           <td></td>

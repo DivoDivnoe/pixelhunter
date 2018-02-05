@@ -1,5 +1,4 @@
 import * as constants from './config/config';
-import {initialState} from './model/data';
 
 const countPoints = (state) => {
   const answers = state.answers;
@@ -7,7 +6,7 @@ const countPoints = (state) => {
 
   if (
     !lives ||
-    answers.length < initialState.questions.length
+    answers.length < state.questions.length
   ) {
     return -1;
   }

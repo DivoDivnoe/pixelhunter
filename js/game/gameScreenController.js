@@ -5,29 +5,25 @@ import SecondGameScreenView from '../game/secondGameScreenView';
 import ThirdGameScreenView from '../game/thirdGameScreenView';
 import * as constants from '../config/config';
 
-const Game = {
-  FIRST_GAME: `game1`,
-  SECOND_GAME: `game2`,
-  THIRD_GAME: `game3`
-};
-
 class GameScreenController {
   constructor(application) {
     this.application = application;
-    this.state = application.state;
-    this.duration = this.state.time;
+    this.model = application.model;
 
     this.routes = {
-      [Game.FIRST_GAME]: FirstGameScreenView,
-      [Game.SECOND_GAME]: SecondGameScreenView,
-      [Game.THIRD_GAME]: ThirdGameScreenView
+      [constants.QuestionType.TWO_OF_TWO]: FirstGameScreenView,
+      [constants.QuestionType.TINDER_LIKE]: SecondGameScreenView,
+      [constants.QuestionType.ONE_OF_THREE]: ThirdGameScreenView
     };
   }
 
   initHeader() {
-    const headerElement = new HeaderView(this.state);
+    const headerElement = new HeaderView(this.model.state);
 
-    headerElement.backClickHandler = () => this.application.showIntro();
+    headerElement.backClickHandler = () => {
+      this.model.resetState(this.model.state.questions);
+      this.application.showWelcome();
+    };
     headerElement.changeTimeHandler = (time) => this.changeTime(time);
     headerElement.finishTimeHandler = (answer) => this.finishTime(answer);
 
@@ -47,9 +43,9 @@ class GameScreenController {
   }
 
   changeTime(time) {
-    this.state = Object.assign({}, this.state, {time});
+    this.model.state = Object.assign({}, this.model.state, {time});
 
-    return this.state;
+    return this.model.state;
   }
 
   finishTime(answer) {
@@ -57,51 +53,21 @@ class GameScreenController {
   }
 
   initScreen() {
-    const game = this.state.questions[this.state.questionNumber];
+    const game = this.model.state.questions[this.model.state.questionNumber];
 
-    return new this.routes[game.type](this.state);
+    return new this.routes[game.type](this.model.state);
   }
 
   init() {
-    this.checkGameStatus(this.state);
+    this.checkGameStatus(this.model.state);
   }
 
   checkGameStatus() {
-    if (!this.state.lives) {
-      this.application.showStats(Object.assign({}, this.state, {result: constants.Result.LOSS}));
-    } else if (this.state.questionNumber === this.state.questions.length) {
-      this.application.showStats(Object.assign({}, this.state, {
-        result: constants.Result.WIN
-      }));
+    if (this.model.state.result) {
+      this.application.showStats();
     } else {
       this.continueGame();
     }
-  }
-
-  getNextState(answer) {
-    const time = this.duration - this.state.time;
-    let result;
-
-    if (answer) {
-      if (time < constants.FAST_ASWER_TIME_UPPER_LIMIT) {
-        result = constants.Answer.FAST;
-      } else if (time >= constants.SLOW_ANSWER_TIME_BOTTOM_LIMIT) {
-        result = constants.Answer.SLOW;
-      } else {
-        result = constants.Answer.NORMAL;
-      }
-    } else {
-      result = constants.Answer.FAIL;
-    }
-
-    this.state = Object.assign({}, this.state, {
-      questionNumber: this.state.questionNumber + 1,
-      lives: this.state.lives - (answer ? 0 : 1),
-      answers: this.state.answers.concat(result),
-      time: this.duration
-    });
-
-    return this.state;
   }
 
   continueGame() {
@@ -114,7 +80,7 @@ class GameScreenController {
 
   continueGameHandler(answer) {
     this.header.stopTimer();
-    this.getNextState(answer);
+    this.model.changeState(answer);
     this.checkGameStatus();
   }
 }
