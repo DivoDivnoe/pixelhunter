@@ -42,21 +42,59 @@ class IntroScreenView extends AbstractView {
   get template() {
     return `
       <div id="main" class="central__content">
-        <div id="intro" class="intro">
+        <div id="intro" class="intro intro--hidden">
           <h1 class="intro__asterisk">*</h1>
           <p class="intro__motto"><sup>*</sup> Это не фото. Это рисунок маслом нидерландского художника-фотореалиста Tjalf Sparnaay.</p>
         </div>
+      </div>
+      <div class="greeting central--blur">
+        <div class="greeting__logo"><img src="img/logo_big.png" width="201" height="89" alt="Pixel Hunter"></div>
+        <h1 class="greeting__asterisk">*</h1>
+        <div class="greeting__challenge">
+          <h3>Лучшие художники-фотореалисты бросают&nbsp;тебе&nbsp;вызов!</h3>
+          <p>Правила игры просты.<br> Нужно отличить рисунок&nbsp;от фотографии и сделать выбор.<br> Задача кажется тривиальной,
+            но не думай, что все так просто.<br> Фотореализм обманчив и коварен.<br> Помни, главное — смотреть очень внимательно.</p>
+        </div>
+        <div class="greeting__continue"><span><img src="img/arrow_right.svg" width="64" height="64" alt="Next"></span></div>
       </div>
     `;
   }
 
   _bind() {
-    const asterix = this.element.querySelector(`.intro__asterisk`);
+    const greeting = this.element.querySelector(`.greeting`);
+    const button = this.element.querySelector(`.greeting__continue`);
 
-    asterix.addEventListener(`click`, () => this.beginGameHandler());
+    button.addEventListener(`click`, () => {
+      this.continueHandler();
+      greeting.classList.remove(`greeting--active`);
+    });
   }
 
-  beginGameHandler() {}
+  showWelcome() {
+    const greeting = this.element.querySelector(`.greeting`);
+
+    greeting.classList.remove(`greeting--hidden`);
+  }
+
+  hideWelcome() {
+    const greeting = this.element.querySelector(`.greeting`);
+
+    greeting.classList.add(`greeting--hidden`);
+  }
+
+  show() {
+    const intro = this.element.querySelector(`.intro--hidden`);
+
+    intro.classList.remove(`intro--hidden`);
+  }
+
+  hide() {
+    const intro = this.element.querySelector(`.intro`);
+
+    intro.classList.add(`intro--hidden`);
+  }
+
+  continueHandler() {}
 }
 
 const main = document.querySelector(`.central`);
@@ -73,13 +111,169 @@ const showScreen = (screen, headerContent) => {
   }
 };
 
-class IntroScreenController {
+class RulesScreenView extends AbstractView {
   constructor() {
+    super();
+  }
+
+  get template() {
+    return `
+      <div class="rules">
+        <h1 class="rules__title">Правила</h1>
+        <p class="rules__description">Угадай 10 раз для каждого изображения фото <img src="img/photo_icon.png" width="16" height="16"> или рисунок <img src="img/paint_icon.png"
+            width="16" height="16" alt="">.<br> Фотографиями или рисунками могут быть оба изображения.<br> На каждую попытку
+          отводится 30 секунд.<br> Ошибиться можно не более 3 раз.<br>
+          <br> Готовы?
+        </p>
+        <form class="rules__form">
+          <input class="rules__input" type="text" placeholder="Ваше Имя">
+          <button class="rules__button  continue" type="submit" disabled>Go!</button>
+        </form>
+      </div>
+    `;
+  }
+
+  _bind() {
+    const form = this.element.querySelector(`.rules__form`);
+    const input = form.querySelector(`.rules__input`);
+    const button = form.querySelector(`.rules__button`);
+
+    input.addEventListener(`input`, (evt) => {
+      button.disabled = evt.target.value ? false : true;
+    });
+
+    form.addEventListener(`submit`, (evt) => {
+      evt.preventDefault();
+
+      this.formSubmitHandler(input.value);
+    });
+  }
+
+  formSubmitHandler() {}
+}
+
+class HeaderView extends AbstractView {
+  constructor(state) {
+    super();
+    this.state = state;
+  }
+
+  get template() {
+    const headerStateTemplate = (state) => `
+      <h1 class="game__timer">${state.time}</h1>
+      <div class="game__lives">
+        ${new Array(3 - state.lives)
+      .fill(`<img src="img/heart__empty.svg" class="game__heart" alt="Life" width="32" height="32">`)
+      .join(``)}
+        ${new Array(state.lives)
+      .fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="32" height="32">`)
+      .join(``)}
+      </div>
+    `;
+    return `
+      <div class="header__back">
+        <button class="back">
+          <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
+          <img src="img/logo_small.svg" width="101" height="44">
+        </button>
+      </div>
+      ${(this.state) ? headerStateTemplate(this.state) : ``}
+    `;
+  }
+
+  get element() {
+    if (!this._element) {
+      this._element = this._render();
+      this._bind();
+      this._startTimer();
+    }
+
+    return this._element;
+  }
+
+  _bind() {
+    const back = this.element.querySelector(`.back`);
+
+
+    back.addEventListener(`click`, () => this.backClickHandler());
+  }
+
+  _startTimer() {
+    const gameTimer = this.element.querySelector(`.game__timer`);
+
+    if (!gameTimer) {
+      return false;
+    }
+    const timer = {
+      leftTime: this.state.time,
+      isActive: true,
+      tick() {
+        this.leftTime--;
+        if (!this.leftTime) {
+          this.isActive = false;
+        }
+      }
+    };
+    this.timer = setInterval(() => {
+      if (!timer.isActive) {
+        this.stopTimer();
+        this.finishTimeHandler(false);
+      } else {
+        timer.tick();
+        this.changeTimeHandler(timer.leftTime);
+        gameTimer.textContent = timer.leftTime;
+      }
+    }, 1000);
+
+    return this.timer;
+  }
+
+  stopTimer() {
+    clearInterval(this.timer);
+  }
+
+  backClickHandler() {}
+
+  finishTimeHandler() {}
+
+  changeTimeHandler() {}
+}
+
+class IntroScreenController {
+  constructor(application) {
+    this.application = application;
+    this.header = new HeaderView();
+    this.rulesScreen = new RulesScreenView();
     this.introScreen = new IntroScreenView();
   }
 
   init() {
+    this.introScreen.continueHandler = () => this.renderRulesScreen();
+
     showScreen(this.introScreen.element);
+  }
+
+  showPreloader() {
+    this.introScreen.show();
+  }
+
+  hidePreloader() {
+    this.introScreen.hide();
+  }
+
+  hideGreetingsScreen() {
+    this.introScreen.hideWelcome();
+  }
+
+  showGreetingsScreen() {
+    this.introScreen.showWelcome();
+  }
+
+  renderRulesScreen() {
+    this.header.backClickHandler = () => this.application.showIntro();
+    this.rulesScreen.formSubmitHandler = (name) => this.application.showGame(name);
+
+    showScreen(this.rulesScreen.element, this.header.element);
   }
 }
 
