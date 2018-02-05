@@ -9,6 +9,4 @@ Thumbs.db
 # Вспомогательные файлы
 *.log
 
-build
-
 node_modules/
