@@ -21,8 +21,8 @@ class GameScreenController {
     const headerElement = new HeaderView(this.model.state);
 
     headerElement.backClickHandler = () => {
-      this.model.resetState(this.model.state.questions);
-      this.application.showIntro();
+      this.model.resetState(this.model.state.questions, this.model.state.imagesData);
+      this.application.showWelcome();
     };
     headerElement.changeTimeHandler = (time) => this.changeTime(time);
     headerElement.finishTimeHandler = (answer) => this.finishTime(answer);
