@@ -41,7 +41,6 @@ class Application {
     controller.init();
   }
   showIntro() {
-    console.log(this.model.state);
     location.hash = ControllerId.INTRO;
   }
   showGame() {
