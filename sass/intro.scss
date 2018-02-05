@@ -7,6 +7,14 @@
   background-size: contain;
 
   position: relative;
+
+  opacity: 1;
+
+  transition: opacity 1s;
+
+  &--hidden {
+    opacity: 0;
+  }
 }
 
 .intro__asterisk {
@@ -20,12 +28,20 @@
   top: 220px;
   left: 30px;
 
-  &:hover {
-    color: $link-hover-color;
-  }
+  animation-name: rotate;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: 1s;
+}
 
-  &:active {
-    color: $link-active-color;
+@keyframes rotate {
+  50% {
+    transform-origin: center center;
+    transform: scale(0.3);
+  }
+  to {
+    transform-origin: center center;
+    transform: scale(1);
   }
 }
 
