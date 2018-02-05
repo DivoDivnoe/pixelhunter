@@ -399,7 +399,7 @@ class GameScreenController {
 
     headerElement.backClickHandler = () => {
       this.model.resetState(this.model.state.questions, this.model.state.imagesData);
-      this.application.showWelcome();
+      this.application.showIntro();
     };
     headerElement.changeTimeHandler = (time) => this.changeTime(time);
     headerElement.finishTimeHandler = (answer) => this.finishTime(answer);
