@@ -18,7 +18,7 @@ class StatsScreenController {
         .then(() => this.model.loadStatistics())
         .then(() => showScreen(this.screen.element, this.header.element));
     this.header.backClickHandler = () => {
-      this.model.resetState(this.model.state.questions);
+      this.model.resetState(this.model.state.questions, this.model.state.imagesData);
       this.application.showWelcome();
     };
   }

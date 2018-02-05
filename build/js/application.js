@@ -540,7 +540,7 @@ class GameScreenController {
     const headerElement = new HeaderView(this.model.state);
 
     headerElement.backClickHandler = () => {
-      this.model.resetState(this.model.state.questions);
+      this.model.resetState(this.model.state.questions, this.model.state.imagesData);
       this.application.showWelcome();
     };
     headerElement.changeTimeHandler = (time) => this.changeTime(time);
@@ -725,7 +725,7 @@ class StatsScreenController {
         .then(() => this.model.loadStatistics())
         .then(() => showScreen(this.screen.element, this.header.element));
     this.header.backClickHandler = () => {
-      this.model.resetState(this.model.state.questions);
+      this.model.resetState(this.model.state.questions, this.model.state.imagesData);
       this.application.showWelcome();
     };
   }
@@ -812,8 +812,8 @@ class Model extends AbstractModel {
     this._state = anotherState;
   }
 
-  resetState(gameItems) {
-    this.state = gameItems ? Object.assign({}, this.initialState, {questions: gameItems}) : this.initialState;
+  resetState(questions, imagesData) {
+    this.state = Object.assign({}, this.initialState, {questions, imagesData});
   }
 
   load() {
