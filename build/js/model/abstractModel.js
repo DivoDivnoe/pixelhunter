@@ -1,3 +1,6 @@
+var abstractModel = (function () {
+'use strict';
+
 class AbstractAdapter {
   toServer() {
     throw Error(`Abstract method. Define toServer method`);
@@ -40,4 +43,8 @@ class AbstractModel {
   }
 }
 
-export default AbstractModel;
+return AbstractModel;
+
+}());
+
+//# sourceMappingURL=abstractModel.js.map

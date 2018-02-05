@@ -1,4 +1,13 @@
-import getElementFromTemplate from '../getElement';
+var abstractView = (function () {
+'use strict';
+
+const getElementFromTemplate = (template) => {
+  const div = document.createElement(`div`);
+
+  div.innerHTML = template;
+
+  return div.children.length > 1 ? div : div.firstElementChild;
+};
 
 class AbstractView {
   get template() {
@@ -25,4 +34,8 @@ class AbstractView {
   }
 }
 
-export default AbstractView;
+return AbstractView;
+
+}());
+
+//# sourceMappingURL=abstractView.js.map

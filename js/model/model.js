@@ -23,6 +23,7 @@ class Model extends AbstractModel {
       answers: [],
       questionNumber: 0,
       questions: null,
+      imagesData: null,
       stats: null
     };
   }

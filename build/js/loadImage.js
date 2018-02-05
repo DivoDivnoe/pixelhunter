@@ -1,4 +1,7 @@
-export const loadImage = (url) => {
+var loadImage = (function (exports) {
+'use strict';
+
+const loadImage = (url) => {
   return new Promise((resolve) => {
     const img = document.createElement(`img`);
 
@@ -15,4 +18,11 @@ export const loadImage = (url) => {
   });
 };
 
-export default loadImage;
+exports.loadImage = loadImage;
+exports['default'] = loadImage;
+
+return exports;
+
+}({}));
+
+//# sourceMappingURL=loadImage.js.map

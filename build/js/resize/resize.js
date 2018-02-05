@@ -1,3 +1,6 @@
+var resize = (function () {
+'use strict';
+
 const resize = (frame, given) => {
   if (!given) {
     return frame;
@@ -19,4 +22,8 @@ const resize = (frame, given) => {
   return result;
 };
 
-export default resize;
+return resize;
+
+}());
+
+//# sourceMappingURL=resize.js.map
