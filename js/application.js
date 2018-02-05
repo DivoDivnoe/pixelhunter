@@ -59,10 +59,15 @@ class Application {
     const urls = new Set();
     const promises = [];
     this.model.state.questions.forEach((item) => item.answers.forEach((answer) => urls.add(answer.image.url)));
+    const imagesData = [];
 
     for (const url of urls) {
-      promises.push(loadImage(url));
+      promises.push(loadImage(url)
+          .then((imageData) => imagesData.push(imageData))
+      );
     }
+
+    this.model.state.imagesData = imagesData;
 
     return Promise.all(promises);
   }

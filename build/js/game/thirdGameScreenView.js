@@ -14,6 +14,10 @@ class AbstractView {
     throw new Error(`You have to define template`);
   }
 
+  get frame() {
+    throw new Error(`You have to define frame dimensions`);
+  }
+
   _render() {
     return getElementFromTemplate(this.template.trim());
   }
@@ -54,19 +58,54 @@ const gameStats = (answers) => `
   </ul>
 `;
 
+const resize = (frame, given) => {
+  if (!given) {
+    return frame;
+  }
+
+  const ratio = given.width / given.height;
+  const outOffsetWidth = given.width - frame.width;
+  const outOffsetHeight = given.height - frame.height;
+  const result = {};
+
+  if (outOffsetWidth >= outOffsetHeight) {
+    result.width = frame.width;
+    result.height = Math.round(result.width / ratio);
+  } else {
+    result.height = frame.height;
+    result.width = Math.round(result.height * ratio);
+  }
+
+  return result;
+};
+
 class ThirdGameScreenView extends AbstractView {
   constructor(state) {
     super();
     this.state = state;
   }
 
+  get frame() {
+    return {
+      width: 304,
+      height: 455
+    };
+  }
+
   get template() {
     const game = this.state.questions[this.state.questionNumber];
-    const question = (item, index) => `
-      <div class="game__option">
-        <img src=${item.image.url} alt="Option ${index + 1}" width="304" height="455">
-      </div>
-    `;
+    const question = (item, index) => {
+      const imageData = this.state.imagesData.find((image) => image.url === item.image.url);
+      const width = imageData.width;
+      const height = imageData.height;
+      const dimensions = resize(this.frame, {width, height});
+
+      return `
+        <div class="game__option">
+          <img src=${item.image.url} alt="Option ${index + 1}" width=${dimensions.width} height=${dimensions.height}>
+        </div>
+      `;
+    };
 
     return `
       <div class="game">

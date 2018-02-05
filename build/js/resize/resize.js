@@ -2,6 +2,10 @@ var resize = (function () {
 'use strict';
 
 const resize = (frame, given) => {
+  if (!given) {
+    return frame;
+  }
+
   const ratio = given.width / given.height;
   const outOffsetWidth = given.width - frame.width;
   const outOffsetHeight = given.height - frame.height;

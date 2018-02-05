@@ -5,6 +5,10 @@ class AbstractView {
     throw new Error(`You have to define template`);
   }
 
+  get frame() {
+    throw new Error(`You have to define frame dimensions`);
+  }
+
   _render() {
     return getElementFromTemplate(this.template.trim());
   }

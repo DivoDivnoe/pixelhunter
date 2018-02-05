@@ -1,5 +1,6 @@
 import abstractView from '../view/abstractView';
 import gameStats from '../templates/gameStats';
+import resize from '../resize/resize';
 
 class ThirdGameScreenView extends abstractView {
   constructor(state) {
@@ -7,13 +8,27 @@ class ThirdGameScreenView extends abstractView {
     this.state = state;
   }
 
+  get frame() {
+    return {
+      width: 304,
+      height: 455
+    };
+  }
+
   get template() {
     const game = this.state.questions[this.state.questionNumber];
-    const question = (item, index) => `
-      <div class="game__option">
-        <img src=${item.image.url} alt="Option ${index + 1}" width="304" height="455">
-      </div>
-    `;
+    const question = (item, index) => {
+      const imageData = this.state.imagesData.find((image) => image.url === item.image.url);
+      const width = imageData.width;
+      const height = imageData.height;
+      const dimensions = resize(this.frame, {width, height});
+
+      return `
+        <div class="game__option">
+          <img src=${item.image.url} alt="Option ${index + 1}" width=${dimensions.width} height=${dimensions.height}>
+        </div>
+      `;
+    };
 
     return `
       <div class="game">

@@ -30,7 +30,6 @@ class AbstractModel {
   }
 
   save(data, adapter = defaultAdapter) {
-    console.log(adapter.toServer(data));
     return fetch(this.urlWrite, {
       method: `POST`,
       body: adapter.toServer(data),
