@@ -1,9 +1,13 @@
 import IntroScreenController from './intro/introScreenController';
+import WelcomeScreenController from './intro/welcomeScreenController';
 import GameScreenController from './game/gameScreenController';
 import StatsScreenController from './stats/statsScreenController';
+import Model from './model/model';
+import loadImage from './loadImage';
 
 const ControllerId = {
   INTRO: ``,
+  WELCOME: `welcome`,
   GAME: `game`,
   STATS: `stats`
 };
@@ -11,98 +15,56 @@ const ControllerId = {
 const getControllerFromHash = (hash) => hash ? hash.slice(1) : ``;
 
 class Application {
-  constructor(state) {
-    this.state = state;
+  constructor() {
+    this._setup();
+    this.init();
+    this.model = new Model();
+    this.model.load()
+        .then(() => this.loadImages())
+        .then(() => this.showWelcome())
+        .catch(console.error);
+  }
+
+  _setup() {
     this.routes = {
       [ControllerId.INTRO]: IntroScreenController,
+      [ControllerId.WELCOME]: WelcomeScreenController,
       [ControllerId.GAME]: GameScreenController,
       [ControllerId.STATS]: StatsScreenController,
     };
-
     window.addEventListener(`hashchange`, () => this._hashChangeHandler());
   }
 
   _hashChangeHandler() {
-    const {controllerId, params} = this._deserialize(location.hash);
+    const controller = new this.routes[getControllerFromHash(location.hash)](this);
 
-    switch (controllerId) {
-      case ControllerId.GAME: {
-        const {name} = params;
-        this.state = Object.assign({}, this.state, {name});
-        break;
-      }
-      case ControllerId.STATS: {
-        const {result, answers} = params;
-        this.state = Object.assign({}, this.state, {result, answers});
-        break;
-      }
-    }
-
-    const controller = new this.routes[controllerId](this);
     controller.init();
   }
   showIntro() {
     location.hash = ControllerId.INTRO;
   }
-  showGame(name) {
-    const result = {
-      controllerId: ControllerId.GAME,
-      params: {name}
-    };
-
-    location.hash = this._serialize(result);
+  showWelcome() {
+    location.hash = ControllerId.WELCOME;
   }
-  showStats(state) {
-    const result = {
-      controllerId: ControllerId.STATS,
-      params:
-        {
-          result: state.result,
-          answers: state.answers
-        }
-    };
-
-    location.hash = this._serialize(result);
+  showGame() {
+    location.hash = ControllerId.GAME;
+  }
+  showStats() {
+    location.hash = ControllerId.STATS;
   }
   init() {
     this._hashChangeHandler();
   }
-  _serialize(state) {
-    const params = state.params;
-    const keys = Object.keys(params);
+  loadImages() {
+    const urls = new Set();
+    const promises = [];
+    this.model.state.questions.forEach((item) => item.answers.forEach((answer) => urls.add(answer.image.url)));
 
-    const resultString = keys.reduce((acc, cur) => {
-      const value = params[cur];
-
-      acc.push(`${cur}=${Array.isArray(value) ? value.join(``) : value}`);
-
-      return acc;
-    }, []).join(`&`);
-
-    return `${state.controllerId}?${resultString}`;
-  }
-
-  _deserialize(hash) {
-    const splited = hash.split(`?`);
-
-    const controllerId = getControllerFromHash(splited[0]);
-    const query = splited[1];
-    let params;
-    if (query) {
-      params = splited[1].split(`&`).reduce((acc, cur) => {
-        const param = cur.split(`=`);
-        const key = param[0];
-        const value = param[1];
-
-        acc[key] = +value ? value.split(``).map(Number) : value;
-
-        return acc;
-      }, {});
-    } else {
-      params = {};
+    for (const url of urls) {
+      promises.push(loadImage(url));
     }
 
-    return {controllerId, params};
+    return Promise.all(promises);
   }
 }
 

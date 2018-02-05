@@ -11,15 +11,15 @@ class ThirdGameScreenView extends abstractView {
     const game = this.state.questions[this.state.questionNumber];
     const question = (item, index) => `
       <div class="game__option">
-        <img src=${item.img} alt="Option ${index + 1}" width="304" height="455">
+        <img src=${item.image.url} alt="Option ${index + 1}" width="304" height="455">
       </div>
     `;
 
     return `
       <div class="game">
-        <p class="game__task">${game.title}</p>
+        <p class="game__task">${game.question}</p>
         <form class="game__content  game__content--triple">
-          ${game.items.map(question).join(``)}
+          ${game.answers.map(question).join(``)}
         </form>
         <div class="stats">${gameStats(this.state.answers)}</div>
       </div>
@@ -32,7 +32,17 @@ class ThirdGameScreenView extends abstractView {
 
     [...options].forEach((option) => option.addEventListener(`click`, (evt) => {
       const target = evt.target;
-      const answer = [...options].indexOf(target) === game.items.findIndex((item) => item.answer);
+      const answers = game.answers;
+      let type = answers[0].type;
+
+      for (let i = 1; i < answers.length; i++) {
+        if (answers[i].type === type) {
+          type = answers.find((item) => item.type !== type).type;
+          break;
+        }
+      }
+
+      const answer = [...options].indexOf(target) === game.answers.findIndex((item) => item.type === type);
 
       this.answerHandler(answer);
     }));
