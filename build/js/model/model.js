@@ -99,8 +99,8 @@ class Model extends AbstractModel {
     this._state = anotherState;
   }
 
-  resetState(gameItems) {
-    this.state = gameItems ? Object.assign({}, this.initialState, {questions: gameItems}) : this.initialState;
+  resetState(questions, imagesData) {
+    this.state = Object.assign({}, this.initialState, {questions, imagesData});
   }
 
   load() {
