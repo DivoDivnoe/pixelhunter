@@ -47,8 +47,6 @@ class Model extends AbstractModel {
     return super.load()
         .then((data) => {
           this.state.questions = data;
-
-          return this.loadStatistics();
         });
   }
 

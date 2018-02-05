@@ -70,7 +70,7 @@ class StatsScreenView extends abstractView {
     : ``}
         </table>
       </div>
-      ${this.state.stats ? this.state.stats.map(resultTable).join(``) : ``}
+      ${this.state.stats ? this.state.stats.slice(0, -1).map(resultTable).join(``) : ``}
     `;
   }
 }
